@@ -1,12 +1,28 @@
 import { test, expect } from '@playwright/test';
+import { AuthService } from './services/authservice';
 
 const TEST_USER = {
-  email: 'User1@gmail.com', // Используем твоего юзера
-  password: '12345678',
+  name: 'Vitaliy',
+  surname: 'Tsal',
+  email: `Vitaliy_Tsal${Date.now()}@gmail.com`,
+  password: 'Evil_Arthas',
   wrong_password: '87654321'
 };
 
 test.describe('Авторизация', () => {
+  
+  test.beforeAll(async ({ browser }) => {
+    const page = await browser.newPage();
+    // Регистрируем нашего лорда
+    await AuthService.register(page, {
+      name: TEST_USER.name,
+      surname: TEST_USER.surname,
+      email: TEST_USER.email,
+      password: TEST_USER.password
+    });
+    
+    await page.close();
+  });
 
   test.beforeEach(async ({ page }) => {
     await page.goto('http://localhost/login');

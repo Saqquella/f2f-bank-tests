@@ -60,7 +60,6 @@ test.describe('Регистрация', () => {
 
   test.fixme('Отказ при вводе пробелов вместо данных (БАГ ФРОНТЕНДА) [Средний]', async ({ page }) => {
     await page.goto('/register');
-  
     
     await page.getByPlaceholder('Type your name').fill('   ');// Вводим одни пробелы
     await page.getByPlaceholder('Type your surname').fill('   ');// Вводим одни пробелы
