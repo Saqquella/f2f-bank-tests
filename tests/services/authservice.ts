@@ -1,4 +1,5 @@
 import { type Page } from '@playwright/test';
+import { UserFactory, TestUser } from './userfactory';
 
 export const AuthService = {
   // 1. Функция входа
@@ -10,7 +11,7 @@ export const AuthService = {
   },
 
   // 2. Функция регистрации
-  async register(page: Page, profile: any) {
+  async register(page: Page, profile: TestUser) {
     await page.goto('/register');
     await page.getByPlaceholder('Type your name').fill(profile.name);
     await page.getByPlaceholder('Type your surname').fill(profile.surname);

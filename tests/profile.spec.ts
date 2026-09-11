@@ -23,7 +23,6 @@ test.describe('Профиль пользователя', () => {
   });
 
   test.beforeEach(async ({ page }) => {
-    // Перед каждым тестом просто логинимся и переходим в профиль
     await page.goto('/login');
     await AuthService.login(page, PROFILE_USER.email, PROFILE_USER.password);
     await page.waitForURL((url) => !url.pathname.includes('/login'), { timeout: 10000 });
@@ -31,8 +30,6 @@ test.describe('Профиль пользователя', () => {
   });
 
   test('Данные в профиле полностью совпадают с регистрационными [Средний]', async ({ page }) => {
-    // Использование регулярных выражений ( /^Name:/ ) как у Кирилла здесь вполне оправдано, 
-    // так как оно строго ищет начало строки, исключая ложные срабатывания.
 
     const nameParagraph = page.locator('p').filter({ hasText: /^Name:/ });
     await expect(nameParagraph).toHaveText(`Name: ${PROFILE_USER.name}`);  
