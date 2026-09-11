@@ -7,12 +7,12 @@ export interface TestUser {
 
 export const UserFactory = {
   createUniqueUser() {
-    const timestamp = `${Date.now()}-${Math.floor(Math.random() * 1000)}`; // уникальное число
+    const timestamp = `${Date.now()}_${Math.floor(Math.random() * 100000)}`; // уникальное число
     return {
       name: 'QA',
       surname: 'engineer',
       email: `tester${timestamp}@f2fbank.local`,
-      password: 'StrongPassword123'
+      password: 'Hannibal_Lector'
     };
   }
 };
