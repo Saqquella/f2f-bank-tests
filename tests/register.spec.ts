@@ -19,7 +19,9 @@ test.describe('Регистрация', () => {
   test('Отказ при регистрации с уже использованной почтой [ Высокий ]', async ({ page }) => {
     await AuthService.register(page, newUser); // 1 reg
     await expect(page).toHaveURL('/login');
+
     await AuthService.register(page, newUser); //2nd reg
+
     await expect(page.locator('.error')).toHaveText('User with this email already exists');
     await expect(page).toHaveURL('/register'); //дополнительная проверка
   });
@@ -39,8 +41,8 @@ test.describe('Регистрация', () => {
     const requestPromise = page.waitForRequest('**/register', { timeout: 1000 }).catch(() => null);
     await page.getByRole('button', { name: 'Register' }).click();
     const request = await requestPromise;
-    // проверка что пустой запрос не улетел на сервер
-    expect(request).toBeNull();
+    
+    expect(request).toBeNull(); // проверка что пустой запрос не улетел на сервер
     await expect(page).toHaveURL('/register');
   });
 
@@ -49,12 +51,24 @@ test.describe('Регистрация', () => {
 
     await page.getByPlaceholder('Type your name').fill('Vitaliy');
     await page.getByPlaceholder('Type your surname').fill('Tsal');
-  
     await page.getByPlaceholder('Type your email').fill('invalid-email-format.com'); // ввод почты без @
     await page.locator('input[type="password"]').fill('ValidPass123');
+
     await page.getByRole('button', { name: 'Register' }).click();
     await expect(page).toHaveURL('/register');
-    // Бонусом можно проверить появление HTML5-подсказки браузера или текста ошибки от фронтенда
   });
 
+  test.fixme('Отказ при вводе пробелов вместо данных (БАГ ФРОНТЕНДА) [Средний]', async ({ page }) => {
+    await page.goto('/register');
+  
+    
+    await page.getByPlaceholder('Type your name').fill('   ');// Вводим одни пробелы
+    await page.getByPlaceholder('Type your surname').fill('   ');// Вводим одни пробелы
+    await page.getByPlaceholder('Type your email').fill(`spaces_${Date.now()}@example.com`);
+    await page.locator('input[type="password"]').fill('   '); // the same 
+  
+    await page.getByRole('button', { name: 'Register' }).click();
+
+    await expect(page).toHaveURL('/register');
+});
 });
