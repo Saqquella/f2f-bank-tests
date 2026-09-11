@@ -5,7 +5,7 @@ export const UserFactory = {
     return {
       name: 'QA',
       surname: 'engineer',
-      email: 'tester${timestamp}@f2fbank.local',
+      email: `tester${timestamp}@f2fbank.local`,
       password: 'StrongPassword123'
     };
   }
