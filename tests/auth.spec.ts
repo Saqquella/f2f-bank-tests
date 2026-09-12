@@ -10,16 +10,18 @@ const TEST_USER = {
 };
 
 test.describe('Авторизация', () => {
+  test.describe.configure({ mode: 'default' });
 
   test.beforeAll(async ({ browser }) => {
     const page = await browser.newPage();
-    await AuthService.register(page, {
+    const response = await AuthService.register(page, {
       name: TEST_USER.name,
       surname: TEST_USER.surname,
       email: TEST_USER.email,
       password: TEST_USER.password
     });
     
+    expect(response.status()).toBe(201);
     await page.close();
   });
 
@@ -27,12 +29,30 @@ test.describe('Авторизация', () => {
     await page.goto('http://localhost/login');
   });
 
+  // test('Успешная авторизация с валидными данными [ Критический ]', async ({ page }) => {
+  //   await page.getByRole('textbox', { name: 'Type your email' }).fill(TEST_USER.email);
+  //   await page.getByRole('textbox', { name: 'Type your password' }).fill(TEST_USER.password);
+  //   await page.getByRole('button', { name: 'Login' }).click();
+  //   await expect(page.locator('text=Transfer by phone number')).toBeVisible();
+  // });
+
   test('Успешная авторизация с валидными данными [ Критический ]', async ({ page }) => {
     await page.getByRole('textbox', { name: 'Type your email' }).fill(TEST_USER.email);
     await page.getByRole('textbox', { name: 'Type your password' }).fill(TEST_USER.password);
+
+    const loginResponsePromise = page.waitForResponse(
+      response =>
+        response.url().includes('/api/auth/login') &&
+        response.request().method() === 'POST'
+    );
+
     await page.getByRole('button', { name: 'Login' }).click();
-    await expect(page.locator('text=Transfer by phone number')).toBeVisible();
-  });
+
+    const loginResponse = await loginResponsePromise;
+    expect(loginResponse.status()).toBe(200);
+    await expect(page).toHaveURL('/');
+    await expect(page.getByText('Transfer by phone number')).toBeVisible();
+});
 
   test('Отказ в авторизации с неверным паролем [ Критический ]', async ({ page }) => {
     await page.getByRole('textbox', { name: 'Type your email' }).fill(TEST_USER.email);

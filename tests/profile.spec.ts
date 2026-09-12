@@ -10,22 +10,27 @@ const PROFILE_USER = {
 };
 
 test.describe('Профиль пользователя', () => {
-
   test.beforeAll(async ({ browser }) => {
     const page = await browser.newPage();
-    await AuthService.register(page, {
-      name: PROFILE_USER.name,
-      surname: PROFILE_USER.surname,
-      email: PROFILE_USER.email,
-      password: PROFILE_USER.password
+
+    const response = await AuthService.register(page, {
+        name: PROFILE_USER.name,
+        surname: PROFILE_USER.surname,
+        email: PROFILE_USER.email,
+        password: PROFILE_USER.password
     });
+    expect(response.status()).toBe(201);
     await page.close();
   });
 
   test.beforeEach(async ({ page }) => {
-    await page.goto('/login');
-    await AuthService.login(page, PROFILE_USER.email, PROFILE_USER.password);
-    await page.waitForURL((url) => !url.pathname.includes('/login'), { timeout: 10000 });
+    const response = await AuthService.login(
+        page,
+        PROFILE_USER.email,
+        PROFILE_USER.password
+    );
+    expect(response.status()).toBe(200);
+    await expect(page).toHaveURL('/');
     await page.goto('/profile');
   });
 
