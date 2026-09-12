@@ -51,7 +51,7 @@ test.describe('Модуль переводов', () => {
   });
 
 
-  test('Перевод блокируется, если номер не начинается с "+" [ Высокий ]', async ({ page }) => {
+  test('Перевод блокируется, если номер не начинается с "+" [Высокий]', async ({ page }) => {
     await fillTransferForm(page, '79991234567', '100');
 
     const requestPromise = page
@@ -73,7 +73,7 @@ test.describe('Модуль переводов', () => {
     expect(request).toBeNull();
   });
 
-  test('Номер короче 10 цифр блокируется [ Средний ]', async ({ page }) => {
+  test('Номер короче 10 цифр блокируется [Средний]', async ({ page }) => {
     await fillTransferForm(page, '+123456789', '100');
 
     await page.getByRole('button', { name: 'Send' }).click();
@@ -83,13 +83,13 @@ test.describe('Модуль переводов', () => {
     );
   });
 
-  test('Номер длиннее 15 цифр блокируется [ Средний ]', async ({ page }) => {
+  test('Номер длиннее 15 цифр блокируется [Средний]', async ({ page }) => {
     await fillTransferForm(page, '+1234567890123456', '100');
     await page.getByRole('button', { name: 'Send' }).click();
     await expect(page.locator('.field-error')).toHaveText('Phone must contain 10–15 digits');
   });
 
-  test('Граничные значения из 10 и 15 цифр принимаются [ Средний ]', async ({ page }) => {
+  test('Граничные значения из 10 и 15 цифр принимаются [Средний]', async ({ page }) => {
     await addBalance(page, 500);
     await fillTransferForm(page, '+1234567890', '50');
 
@@ -105,9 +105,7 @@ test.describe('Модуль переводов', () => {
     expect(response.status()).toBe(200);
 
     await expect(page.getByText('Transfer completed', { exact: true })).toBeVisible();
-
     await page.getByRole('button', { name: 'New transfer' }).click();
-
     await fillTransferForm(page, '+123456789012345', '50');
 
     responsePromise = page.waitForResponse(
@@ -120,12 +118,11 @@ test.describe('Модуль переводов', () => {
 
     response = await responsePromise;
     expect(response.status()).toBe(200);
-
     await expect(page.getByText('Transfer completed')).toBeVisible();
   });
 
 
-  test('Нулевая сумма перевода не отправляется [ Высокий ]', async ({ page }) => {
+  test('Нулевая сумма перевода не отправляется [Высокий]', async ({ page }) => {
     await fillTransferForm(page, '+7 999 123-45-67', '0');
 
     const requestPromise = page
@@ -138,24 +135,20 @@ test.describe('Модуль переводов', () => {
       .catch(() => null);
 
     await page.getByRole('button', { name: 'Send' }).click();
-
     const request = await requestPromise;
-
     expect(request).toBeNull();
     await expect(page.getByText('Transfer by phone number')).toBeVisible();
   });
 
 
-  test('Отрицательная сумма перевода блокируется [ Высокий ]', async ({ page }) => {
+  test('Отрицательная сумма перевода блокируется [Высокий]', async ({ page }) => {
     await fillTransferForm(page, '+7 999 123-45-67', '-100');
-
     await page.getByRole('button', { name: 'Send' }).click();
-
     await expect(page.locator('.snackbar')).toContainText('Amount must be greater than zero');
   });
 
 
-  test('Перевод при нулевом балансе блокируется [ Критический ]', async ({ page }) => {
+  test('Перевод при нулевом балансе блокируется [Критический]', async ({ page }) => {
     await fillTransferForm(page, '+7 999 123-45-67', '100');
 
     const responsePromise = page.waitForResponse(
@@ -165,20 +158,15 @@ test.describe('Модуль переводов', () => {
     );
 
     await page.getByRole('button', { name: 'Send' }).click();
-
     const response = await responsePromise;
-
     expect(response.status()).toBe(400);
-
     await expect(page.locator('.snackbar')).toContainText('Transfer failed. Check your balance.');
-
     await expect(page.locator('.balance-hint')).toHaveText('Balance: 0');
   });
 
 
   test('Перевод суммы больше доступного баланса блокируется [Критический]', async ({ page }) => {
     await addBalance(page, 100);
-
     await fillTransferForm(page, '+7 999 123-45-67', '101');
 
     const responsePromise = page.waitForResponse(
@@ -188,19 +176,15 @@ test.describe('Модуль переводов', () => {
     );
 
     await page.getByRole('button', { name: 'Send' }).click();
-
     const response = await responsePromise;
-
     expect(response.status()).toBe(400);
-
     await expect(page.locator('.snackbar')).toContainText('Transfer failed. Check your balance.');
     await expect(page.locator('.balance-hint')).toHaveText('Balance: 100');
   });
 
 
-  test('Успешный перевод уменьшает баланс и появляется в истории [ Критический ]', async ({ page }) => {
+  test('Успешный перевод уменьшает баланс и появляется в истории [Критический]', async ({ page }) => {
     await addBalance(page, 500);
-
     await fillTransferForm(
       page,
       '+7 (999) 123-45-67',
@@ -215,13 +199,9 @@ test.describe('Модуль переводов', () => {
     );
 
     await page.getByRole('button', { name: 'Send' }).click();
-
     const response = await responsePromise;
-
     expect(response.status()).toBe(200);
-
     await expect(page.getByText('Transfer completed',{ exact: true })).toBeVisible();
-
     await expect(page.locator('.balance-hint')).toHaveText('Balance: 375');
     await page.goto('/transactions');
 
@@ -233,7 +213,7 @@ test.describe('Модуль переводов', () => {
     await expect(withdrawalRow).toBeVisible();
   });
 
-  test('Cancel очищает заполненную форму [ Низкий ]', async ({ page }) => {
+  test('Cancel очищает заполненную форму [Низкий]', async ({ page }) => {
     const phoneInput = page.getByPlaceholder('+7 999 123-45-67');
     const amountInput = page.getByPlaceholder('0.00');
     const purposeInput = page.getByPlaceholder('e.g. debt repayment');
@@ -241,9 +221,7 @@ test.describe('Модуль переводов', () => {
     await phoneInput.fill('+7 999 123-45-67');
     await amountInput.fill('100');
     await purposeInput.fill('Test transfer');
-
     await page.getByRole('button', { name: 'Cancel' }).click();
-
     await expect(phoneInput).toHaveValue('');
     await expect(amountInput).toHaveValue('');
     await expect(purposeInput).toHaveValue('');
@@ -251,7 +229,6 @@ test.describe('Модуль переводов', () => {
 
   test('Перевод всей доступной суммы оставляет баланс 0 [Критический]', async ({ page }) => {
     await addBalance(page, 100);
-
     await fillTransferForm(
         page,
         '+7 999 123-45-67',
@@ -269,11 +246,10 @@ test.describe('Модуль переводов', () => {
     const response = await responsePromise;
     expect(response.status()).toBe(200);
     await expect(page.getByText('Transfer completed', { exact: true })).toBeVisible();
-
     await expect(page.locator('.balance-hint')).toHaveText('Balance: 0');
   });
 
-  test.fixme('BUG-003: для суммы 0 отображается корректная причина ошибки [ Средний ]', async ({ page }) => {
+  test.fixme('BUG-003: для суммы 0 отображается корректная причина ошибки [Средний]', async ({ page }) => {
     await fillTransferForm(
       page,
       '+7 999 123-45-67',
@@ -283,6 +259,17 @@ test.describe('Модуль переводов', () => {
 
     await page.getByRole('button', { name: 'Send' }).click();
     await expect(page.locator('.snackbar')).toContainText('Amount must be greater than zero');
-  }
-);
+  });
+
+  test.fixme('Телефон с буквами отклоняется [Высокий]',async ({ page }) => {
+    await fillTransferForm(
+      page,
+      '+7abc9991234567',
+      '100',
+      'Invalid phone'
+    );
+
+    await page.getByRole('button', { name: 'Send' }).click();
+    await expect(page.locator('.field-error')).toBeVisible();
+  });
 });

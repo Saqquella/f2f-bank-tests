@@ -26,7 +26,7 @@ test.describe('Модуль транзакций', () => {
   });
 
 
-  test('Успешное пополнение увеличивает баланс и появляется в истории [ Критический ]', async ({ page }) => {
+  test('Успешное пополнение увеличивает баланс и появляется в истории [Критический]', async ({ page }) => {
     await openBalanceModal(page);
 
     await page
@@ -60,7 +60,7 @@ test.describe('Модуль транзакций', () => {
   });
 
 
-  test('Пополнение на сумму 0 блокируется [ Высокий ]', async ({ page }) => {
+  test('Пополнение на сумму 0 блокируется [Высокий]', async ({ page }) => {
     await openBalanceModal(page);
 
     await page
@@ -90,7 +90,7 @@ test.describe('Модуль транзакций', () => {
   });
 
 
-  test('Отрицательная сумма пополнения блокируется [ Высокий ]', async ({ page }) => {
+  test('Отрицательная сумма пополнения блокируется [Высокий]', async ({ page }) => {
     await openBalanceModal(page);
 
     await page
@@ -119,7 +119,7 @@ test.describe('Модуль транзакций', () => {
     await expect(page.getByText('No transactions yet')).toBeVisible();
   });
 
-  test('Cancel отменяет пополнение и очищает введённую сумму [ Низкий ]', async ({ page }) => {
+  test('Cancel отменяет пополнение и очищает введённую сумму [Низкий]', async ({ page }) => {
     await openBalanceModal(page);
 
     const amountInput = page.getByPlaceholder('Enter sum');
@@ -136,7 +136,7 @@ test.describe('Модуль транзакций', () => {
     await expect(page.getByPlaceholder('Enter sum')).toHaveValue('');
   });
 
-  test.fixme('BUG-007: колонки тип и статус в transactions отображаются правильно [ Средний ]',async ({ page }) => {
+  test.fixme('BUG-007: колонки тип и статус в transactions отображаются правильно [Средний]',async ({ page }) => {
     const row = page.locator('tbody tr').first();
     const cells = row.locator('td');
     await expect(cells.nth(2)).toHaveText('deposit');

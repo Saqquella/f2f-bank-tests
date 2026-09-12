@@ -29,7 +29,7 @@ test.describe('Авторизация', () => {
     await page.goto('/login');
   });
 
-  test('Успешная авторизация с валидными данными [ Критический ]', async ({ page }) => {
+  test('Успешная авторизация с валидными данными [Критический]', async ({ page }) => {
     await page.getByRole('textbox', { name: 'Type your email' }).fill(TEST_USER.email);
     await page.getByRole('textbox', { name: 'Type your password' }).fill(TEST_USER.password);
 
@@ -47,7 +47,7 @@ test.describe('Авторизация', () => {
     await expect(page.getByText('Transfer by phone number')).toBeVisible();
 });
 
-  test('Отказ в авторизации с неверным паролем [ Критический ]', async ({ page }) => {
+  test('Отказ в авторизации с неверным паролем [Критический]', async ({ page }) => {
     await page.getByRole('textbox', { name: 'Type your email' }).fill(TEST_USER.email);
     await page.getByRole('textbox', { name: 'Type your password' }).fill(TEST_USER.wrong_password);
     const responsePromise = page.waitForResponse('**/login');
@@ -92,7 +92,7 @@ test.describe('Авторизация', () => {
     await expect(page.locator('text=Transfer by phone number')).toBeVisible();
   });
 
-  test('Навигация, работа кнопки "Register page" [ низкий ]', async ({ page }) => {
+  test('Навигация, работа кнопки "Register page" [Низкий]', async ({ page }) => {
     await page.getByText('Register page').click();
     await expect(page).toHaveURL('/register');
   });

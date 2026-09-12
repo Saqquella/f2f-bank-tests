@@ -9,14 +9,14 @@ test.describe('Регистрация', () => {
     newUser = UserFactory.createUniqueUser();
   });
 
-  test('Успешная регистрация с валидными данными [ Критический ]', async ({ page }) => {
+  test('Успешная регистрация с валидными данными [Критический]', async ({ page }) => {
     await AuthService.register(page, newUser);
 
     await expect(page).toHaveURL('/login');
     await expect(page.locator('.snackbar.success')).toHaveText('Registration successful! Please log in.');
   });
 
-  test('Отказ при регистрации с уже использованной почтой [ Высокий ]', async ({ page }) => {
+  test('Отказ при регистрации с уже использованной почтой [Высокий]', async ({ page }) => {
     await AuthService.register(page, newUser);
     await expect(page).toHaveURL('/login');
 
@@ -26,7 +26,7 @@ test.describe('Регистрация', () => {
     await expect(page).toHaveURL('/register'); 
   });
 
-  test('Регистрация корректно обрабатывает SQL-like символы в имени @security [ Высокий ]', async ({ page }) => {
+  test('Регистрация корректно обрабатывает SQL-like символы в имени @security [Высокий]', async ({ page }) => {
     newUser.name = "Dmitry'; DROP TABLE users; --"; 
 
     const responsePromise = page.waitForResponse('/register');
@@ -35,7 +35,7 @@ test.describe('Регистрация', () => {
     expect(response.status()).not.toBe(500);
   });
 
-  test('Отправка пустой формы блокируется фронтендом [ Средний ]', async ({ page }) => {
+  test('Отправка пустой формы блокируется фронтендом [Средний]', async ({ page }) => {
     await page.goto('/register');
     const requestPromise = page.waitForRequest('**/register', { timeout: 1000 }).catch(() => null);
     await page.getByRole('button', { name: 'Register' }).click();
@@ -57,7 +57,7 @@ test.describe('Регистрация', () => {
     await expect(page).toHaveURL('/register');
   });
 
-  test.fixme('Отказ при вводе пробелов вместо данных (БАГ ФРОНТЕНДА) [Средний]', async ({ page }) => {
+  test.fixme('Отказ при вводе пробелов вместо данных [Средний]', async ({ page }) => {
     await page.goto('/register');
     
     await page.getByPlaceholder('Type your name').fill('   ');

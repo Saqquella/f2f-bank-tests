@@ -8,3 +8,10 @@ node_modules/
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+
+# Environment
+.env
