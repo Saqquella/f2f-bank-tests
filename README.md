@@ -90,19 +90,18 @@ npx playwright install chromium
 Запустить весь набор:
 
 ```bash
-npx playwright test или npm test
+npm test
 ```
-
 Запустить тесты в UI Mode:
 
 ```bash
-npx playwright test --ui или npm test --ui
+npm run test:ui
 ```
 
 Запустить браузер в headed-режиме:
 
 ```bash
-npx playwright test --headed или npm test --headed
+npm run test:headed
 ```
 
 Запустить отдельный файл:
@@ -114,9 +113,19 @@ npx playwright test tests/auth.spec.ts
 Открыть HTML-отчёт после прогона:
 
 ```bash
-npx playwright show-report или npm show-report
+npm run report
 ```
-
+По умолчанию HTML-отчёт будет доступен по адресу:
+```bash
+http://localhost:9323
+```
+Эквивалентные команды Playwright:
+```bash
+npx playwright test
+npx playwright test --ui
+npx playwright test --headed
+npx playwright show-report
+```
 ## Структура тестов
 
 ```text
@@ -153,7 +162,7 @@ fullyParallel: true
 test.describe.configure({ mode: 'default' });
 ```
 
-Это локально отключает fully-parallel режим только для auth-suite и предотвращает конкуренцию нескольких workers за общее backend-состояние. Остальные тесты продолжают выполняться параллельно.
+Это локально отключает fully-parallel режим наборов auth и profile и предотвращает конкуренцию нескольких workers за общее backend-состояние. Остальные тесты продолжают выполняться параллельно.
 
 ## Покрытые сценарии
 

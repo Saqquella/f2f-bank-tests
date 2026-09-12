@@ -26,7 +26,7 @@ test.describe('Регистрация', () => {
     await expect(page).toHaveURL('/register'); 
   });
 
-  test('Поле ввода имени не обрабатывает SQL-like символы @security [Высокий]', async ({ page }) => {
+  test('Регистрация корректно обрабатывает SQL-like символы в имени @security [ Высокий ]', async ({ page }) => {
     newUser.name = "Dmitry'; DROP TABLE users; --"; 
 
     const responsePromise = page.waitForResponse('/register');
@@ -35,7 +35,7 @@ test.describe('Регистрация', () => {
     expect(response.status()).not.toBe(500);
   });
 
-  test('Отправка пустой формы блокируется фронтендом [Средний]', async ({ page }) => {
+  test('Отправка пустой формы блокируется фронтендом [ Средний ]', async ({ page }) => {
     await page.goto('/register');
     const requestPromise = page.waitForRequest('**/register', { timeout: 1000 }).catch(() => null);
     await page.getByRole('button', { name: 'Register' }).click();

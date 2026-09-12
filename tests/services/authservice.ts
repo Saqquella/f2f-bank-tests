@@ -1,8 +1,7 @@
 import { type Page } from '@playwright/test';
-import { UserFactory, TestUser } from './userfactory';
+import { TestUser } from './userfactory';
 
 export const AuthService = {
-  // 1. Функция входа
   async login(page: Page, email: string, pass: string) {
     await page.goto('/login');
     await page.getByPlaceholder('Type your email').fill(email);
@@ -17,7 +16,6 @@ export const AuthService = {
     return await responsePromise;
   },
 
-  // 2. Функция регистрации
   async register(page: Page, profile: TestUser) {
     await page.goto('/register');
     await page.getByPlaceholder('Type your name').fill(profile.name);

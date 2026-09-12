@@ -26,7 +26,7 @@ test.describe('Авторизация', () => {
   });
 
   test.beforeEach(async ({ page }) => {
-    await page.goto('http://localhost/login');
+    await page.goto('/login');
   });
 
   test('Успешная авторизация с валидными данными [ Критический ]', async ({ page }) => {
