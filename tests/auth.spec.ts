@@ -29,13 +29,6 @@ test.describe('Авторизация', () => {
     await page.goto('http://localhost/login');
   });
 
-  // test('Успешная авторизация с валидными данными [ Критический ]', async ({ page }) => {
-  //   await page.getByRole('textbox', { name: 'Type your email' }).fill(TEST_USER.email);
-  //   await page.getByRole('textbox', { name: 'Type your password' }).fill(TEST_USER.password);
-  //   await page.getByRole('button', { name: 'Login' }).click();
-  //   await expect(page.locator('text=Transfer by phone number')).toBeVisible();
-  // });
-
   test('Успешная авторизация с валидными данными [ Критический ]', async ({ page }) => {
     await page.getByRole('textbox', { name: 'Type your email' }).fill(TEST_USER.email);
     await page.getByRole('textbox', { name: 'Type your password' }).fill(TEST_USER.password);

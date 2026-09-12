@@ -10,6 +10,7 @@ const PROFILE_USER = {
 };
 
 test.describe('Профиль пользователя', () => {
+test.describe.configure({ mode: 'default' });
   test.beforeAll(async ({ browser }) => {
     const page = await browser.newPage();
 

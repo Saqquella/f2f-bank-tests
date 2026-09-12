@@ -3,7 +3,12 @@
   "version": "1.0.0",
   "description": "F2F Bank - простое веб-приложение, имитирующее сервис переводов между пользователями в стиле СБП. Пользователи могут регистрироваться, входить в систему, пополнять баланс и отправлять переводы по номеру телефона.",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+  "test": "playwright test",
+  "test:ui": "playwright test --ui",
+  "test:headed": "playwright test --headed",
+  "report": "playwright show-report"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
