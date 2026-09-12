@@ -90,19 +90,19 @@ npx playwright install chromium
 Запустить весь набор:
 
 ```bash
-npx playwright test
+npx playwright test или npm test
 ```
 
 Запустить тесты в UI Mode:
 
 ```bash
-npx playwright test --ui
+npx playwright test --ui или npm test --ui
 ```
 
 Запустить браузер в headed-режиме:
 
 ```bash
-npx playwright test --headed
+npx playwright test --headed или npm test --headed
 ```
 
 Запустить отдельный файл:
@@ -114,7 +114,7 @@ npx playwright test tests/auth.spec.ts
 Открыть HTML-отчёт после прогона:
 
 ```bash
-npx playwright show-report
+npx playwright show-report или npm show-report
 ```
 
 ## Структура тестов
