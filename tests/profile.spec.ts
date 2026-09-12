@@ -41,4 +41,20 @@ test.describe('Профиль пользователя', () => {
     await expect(mailParagraph).toHaveText(`Email: ${PROFILE_USER.email}`);
   });
 
+  test('После перезагрузки страницы данные профиля сохраняются [Средний]', async ({ page }) => {
+    const nameParagraph = page.locator('p').filter({ hasText: /^Name:/ });
+    const surnameParagraph = page.locator('p').filter({ hasText: /^Surname:/ });
+    const mailParagraph = page.locator('p').filter({ hasText: /^Email:/ });
+
+    await expect(nameParagraph).toHaveText(`Name: ${PROFILE_USER.name}`);
+    await expect(surnameParagraph).toHaveText(`Surname: ${PROFILE_USER.surname}`);
+    await expect(mailParagraph).toHaveText(`Email: ${PROFILE_USER.email}`);
+
+    await page.reload();
+    await expect(page).toHaveURL('/profile');
+
+    await expect(nameParagraph).toHaveText(`Name: ${PROFILE_USER.name}`);
+    await expect(surnameParagraph).toHaveText(`Surname: ${PROFILE_USER.surname}`);
+    await expect(mailParagraph).toHaveText(`Email: ${PROFILE_USER.email}`);
+  }); 
 });

@@ -136,4 +136,11 @@ test.describe('Модуль транзакций', () => {
     await expect(page.getByPlaceholder('Enter sum')).toHaveValue('');
   });
 
+  test.fixme('BUG-007: колонки тип и статус в transactions отображаются правильно [ Средний ]',async ({ page }) => {
+    const row = page.locator('tbody tr').first();
+    const cells = row.locator('td');
+    await expect(cells.nth(2)).toHaveText('deposit');
+    await expect(cells.nth(3)).toHaveText('completed');
+  });
+
 });

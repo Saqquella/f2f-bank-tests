@@ -91,7 +91,7 @@ test.describe('Модуль переводов', () => {
 
   test('Граничные значения из 10 и 15 цифр принимаются [ Средний ]', async ({ page }) => {
     await addBalance(page, 500);
-    await fillTransferForm(page, '+1234567890', '50');// Нижняя граница — 10 цифр.
+    await fillTransferForm(page, '+1234567890', '50');
 
     let responsePromise = page.waitForResponse(
       response =>
@@ -108,7 +108,7 @@ test.describe('Модуль переводов', () => {
 
     await page.getByRole('button', { name: 'New transfer' }).click();
 
-    await fillTransferForm(page, '+123456789012345', '50');    // Верхняя граница 15 цифр.
+    await fillTransferForm(page, '+123456789012345', '50');
 
     responsePromise = page.waitForResponse(
       response =>
@@ -194,8 +194,6 @@ test.describe('Модуль переводов', () => {
     expect(response.status()).toBe(400);
 
     await expect(page.locator('.snackbar')).toContainText('Transfer failed. Check your balance.');
-
-    // Неуспешный перевод не должен изменить баланс.
     await expect(page.locator('.balance-hint')).toHaveText('Balance: 100');
   });
 
@@ -251,4 +249,40 @@ test.describe('Модуль переводов', () => {
     await expect(purposeInput).toHaveValue('');
   });
 
+  test('Перевод всей доступной суммы оставляет баланс 0 [Критический]', async ({ page }) => {
+    await addBalance(page, 100);
+
+    await fillTransferForm(
+        page,
+        '+7 999 123-45-67',
+        '100',
+        'Full balance transfer'
+    );
+
+    const responsePromise = page.waitForResponse(
+        response =>
+        response.url().includes('/api/users/transfer') &&
+        response.request().method() === 'POST'
+    );
+
+    await page.getByRole('button', { name: 'Send' }).click();
+    const response = await responsePromise;
+    expect(response.status()).toBe(200);
+    await expect(page.getByText('Transfer completed', { exact: true })).toBeVisible();
+
+    await expect(page.locator('.balance-hint')).toHaveText('Balance: 0');
+  });
+
+  test.fixme('BUG-003: для суммы 0 отображается корректная причина ошибки [ Средний ]', async ({ page }) => {
+    await fillTransferForm(
+      page,
+      '+7 999 123-45-67',
+      '0',
+      'Zero amount'
+    );
+
+    await page.getByRole('button', { name: 'Send' }).click();
+    await expect(page.locator('.snackbar')).toContainText('Amount must be greater than zero');
+  }
+);
 });

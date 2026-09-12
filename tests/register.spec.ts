@@ -17,17 +17,16 @@ test.describe('Регистрация', () => {
   });
 
   test('Отказ при регистрации с уже использованной почтой [ Высокий ]', async ({ page }) => {
-    await AuthService.register(page, newUser); // 1 reg
+    await AuthService.register(page, newUser);
     await expect(page).toHaveURL('/login');
 
-    await AuthService.register(page, newUser); //2nd reg
+    await AuthService.register(page, newUser); 
 
     await expect(page.locator('.error')).toHaveText('User with this email already exists');
-    await expect(page).toHaveURL('/register'); //дополнительная проверка
+    await expect(page).toHaveURL('/register'); 
   });
 
-  test('Защита от SQL-инъекций в поле имени @security [Высокий]', async ({ page }) => {
-
+  test('Поле ввода имени не обрабатывает SQL-like символы @security [Высокий]', async ({ page }) => {
     newUser.name = "Dmitry'; DROP TABLE users; --"; 
 
     const responsePromise = page.waitForResponse('/register');
@@ -42,7 +41,7 @@ test.describe('Регистрация', () => {
     await page.getByRole('button', { name: 'Register' }).click();
     const request = await requestPromise;
     
-    expect(request).toBeNull(); // проверка что пустой запрос не улетел на сервер
+    expect(request).toBeNull(); 
     await expect(page).toHaveURL('/register');
   });
 
@@ -51,7 +50,7 @@ test.describe('Регистрация', () => {
 
     await page.getByPlaceholder('Type your name').fill('Vitaliy');
     await page.getByPlaceholder('Type your surname').fill('Tsal');
-    await page.getByPlaceholder('Type your email').fill('invalid-email-format.com'); // ввод почты без @
+    await page.getByPlaceholder('Type your email').fill('invalid-email-format.com');
     await page.locator('input[type="password"]').fill('ValidPass123');
 
     await page.getByRole('button', { name: 'Register' }).click();
@@ -61,13 +60,26 @@ test.describe('Регистрация', () => {
   test.fixme('Отказ при вводе пробелов вместо данных (БАГ ФРОНТЕНДА) [Средний]', async ({ page }) => {
     await page.goto('/register');
     
-    await page.getByPlaceholder('Type your name').fill('   ');// Вводим одни пробелы
-    await page.getByPlaceholder('Type your surname').fill('   ');// Вводим одни пробелы
+    await page.getByPlaceholder('Type your name').fill('   ');
+    await page.getByPlaceholder('Type your surname').fill('   ');
     await page.getByPlaceholder('Type your email').fill(`spaces_${Date.now()}@example.com`);
-    await page.locator('input[type="password"]').fill('   '); // the same 
-  
+    await page.locator('input[type="password"]').fill('   '); 
     await page.getByRole('button', { name: 'Register' }).click();
-
     await expect(page).toHaveURL('/register');
-});
+  });
+
+  test('После успешной регистрации пользователь может авторизоваться [Критический]', async ({ page }) => {
+    await AuthService.register(page, newUser);
+
+    await expect(page).toHaveURL('/login');
+    await expect(page.locator('.snackbar.success')).toHaveText('Registration successful! Please log in.');
+
+    await AuthService.login(
+        page,
+        newUser.email,
+        newUser.password
+    );
+    await expect(page).toHaveURL('/');
+    await expect(page.getByText('Transfer by phone number')).toBeVisible();
+  });
 });
