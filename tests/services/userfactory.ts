@@ -7,7 +7,7 @@ export interface TestUser {
 
 export const UserFactory = {
   createUniqueUser() {
-    const timestamp = `${Date.now()}_${Math.floor(Math.random() * 100000)}`; // уникальное число
+    const timestamp = `${Date.now()}_${Math.floor(Math.random() * 100000)}`;
     return {
       name: 'QA',
       surname: 'engineer',

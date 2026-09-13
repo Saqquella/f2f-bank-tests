@@ -45,7 +45,7 @@ test.describe('Авторизация', () => {
     expect(loginResponse.status()).toBe(200);
     await expect(page).toHaveURL('/');
     await expect(page.getByText('Transfer by phone number')).toBeVisible();
-});
+  });
 
   test('Отказ в авторизации с неверным паролем [Критический]', async ({ page }) => {
     await page.getByRole('textbox', { name: 'Type your email' }).fill(TEST_USER.email);
@@ -96,7 +96,5 @@ test.describe('Авторизация', () => {
     await page.getByText('Register page').click();
     await expect(page).toHaveURL('/register');
   });
-
-
 
 });

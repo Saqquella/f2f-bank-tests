@@ -261,7 +261,7 @@ test.describe('Модуль переводов', () => {
     await expect(page.locator('.snackbar')).toContainText('Amount must be greater than zero');
   });
 
-  test.fixme('Телефон с буквами отклоняется [Высокий]',async ({ page }) => {
+  test.fixme('BUG-009: Телефон с буквами отклоняется [Высокий]',async ({ page }) => {
     await fillTransferForm(
       page,
       '+7abc9991234567',

@@ -19,16 +19,13 @@ test.describe('Регистрация', () => {
   test('Отказ при регистрации с уже использованной почтой [Высокий]', async ({ page }) => {
     await AuthService.register(page, newUser);
     await expect(page).toHaveURL('/login');
-
     await AuthService.register(page, newUser); 
-
     await expect(page.locator('.error')).toHaveText('User with this email already exists');
     await expect(page).toHaveURL('/register'); 
   });
 
   test('Регистрация корректно обрабатывает SQL-like символы в имени @security [Высокий]', async ({ page }) => {
-    newUser.name = "Dmitry'; DROP TABLE users; --"; 
-
+    newUser.name = "Vorovskaya_Lapa'; DROP TABLE users; --"; 
     const responsePromise = page.waitForResponse('/register');
     await AuthService.register(page, newUser);
     const response = await responsePromise;
@@ -48,8 +45,8 @@ test.describe('Регистрация', () => {
   test('Отказ при вводе некорректного формата email [Средний]', async ({ page }) => {
     await page.goto('/register');
 
-    await page.getByPlaceholder('Type your name').fill('Vitaliy');
-    await page.getByPlaceholder('Type your surname').fill('Tsal');
+    await page.getByPlaceholder('Type your name').fill('Sonya');
+    await page.getByPlaceholder('Type your surname').fill('Marmeladova');
     await page.getByPlaceholder('Type your email').fill('invalid-email-format.com');
     await page.locator('input[type="password"]').fill('ValidPass123');
 
@@ -70,15 +67,9 @@ test.describe('Регистрация', () => {
 
   test('После успешной регистрации пользователь может авторизоваться [Критический]', async ({ page }) => {
     await AuthService.register(page, newUser);
-
     await expect(page).toHaveURL('/login');
     await expect(page.locator('.snackbar.success')).toHaveText('Registration successful! Please log in.');
-
-    await AuthService.login(
-        page,
-        newUser.email,
-        newUser.password
-    );
+    await AuthService.login(page,newUser.email,newUser.password);
     await expect(page).toHaveURL('/');
     await expect(page.getByText('Transfer by phone number')).toBeVisible();
   });
