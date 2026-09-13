@@ -1,7 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { AuthService } from './services/authservice';
 
-// Создаем отдельного юзера для тестов профиля, чтобы избежать конфликтов при параллельном запуске
 const PROFILE_USER = {
   name: 'Valery',
   surname: 'Zhmyshenko', 
